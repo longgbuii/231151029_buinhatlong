@@ -1,5 +1,4 @@
-// path: crs-frontend/src/types/auth.ts
-// purpose: interface khop voi LoginRequestDTO/LoginResponseDTO ben auth-service (Buoi 4)
+
 export interface LoginRequest {
   username: string;
   password: string;
