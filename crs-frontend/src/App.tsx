@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import axios from 'axios';
 import { useCourses } from './api/useCourses';
 import { createCourse, updateCourse, deleteCourse } from './api/courseApi';
@@ -18,10 +18,14 @@ function App() {
 
   const { courses, totalPages, state, errorMessage, refetch } = useCourses(keyword, page);
 
-  const handleSearch = (newKeyword: string) => {
-    setKeyword(newKeyword);
-    setPage(0);
-  };
+  const handleSearch = useCallback((newKeyword: string) => {
+    setKeyword((prev) => {
+      if (prev !== newKeyword) {
+        setPage(0);
+      }
+      return newKeyword;
+    });
+  }, []);
 
   const extractErrorMessage = (err: unknown): string => {
     if (axios.isAxiosError<ApiErrorResponse>(err)) {
