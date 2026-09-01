@@ -1,5 +1,6 @@
 package vn.edu.crs.courseservice.config;
 
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,12 +22,16 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .exceptionHandling(ex -> ex
+                        .authenticationEntryPoint((request, response, authException) ->
+                                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized"))
+                )
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/internal/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/courses/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/courses/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.PUT, "/courses/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "/courses/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/courses", "/courses/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/courses", "/courses/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/courses", "/courses/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/courses", "/courses/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
@@ -34,3 +39,4 @@ public class SecurityConfig {
         return http.build();
     }
 }
+
