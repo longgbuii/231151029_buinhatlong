@@ -35,6 +35,7 @@ class AuthServiceTest {
     @Test
     void login_shouldReturnToken_whenCredentialsAreValid() {
         User user = new User();
+        user.setId(1L);
         user.setUsername("admin");
         user.setPassword("hashed-password");
         user.setRole("ADMIN");
@@ -45,7 +46,7 @@ class AuthServiceTest {
 
         when(userRepository.findByUsername("admin")).thenReturn(Optional.of(user));
         when(passwordEncoder.matches("admin123", "hashed-password")).thenReturn(true);
-        when(jwtUtil.generateToken("admin", "ADMIN")).thenReturn("jwt-token");
+        when(jwtUtil.generateToken(1L, "admin", "ADMIN")).thenReturn("jwt-token");
 
         LoginResponseDTO response = authService.login(dto);
 
