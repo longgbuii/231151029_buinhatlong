@@ -24,7 +24,7 @@ public class RegistrationController {
     }
 
     @DeleteMapping("/{id}")
-    public void cancel(@PathVariable Long id) {
+    public void cancel(@PathVariable("id") Long id) {
         registrationService.cancel(id);
     }
 
